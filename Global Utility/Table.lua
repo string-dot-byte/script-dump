@@ -256,21 +256,21 @@ end
 
 local TableToInstance
 TableToInstance = function(Table,Parent) -- turns table into folder
-	for Index,Value in pairs(Table) do
+	for Index, Value in pairs(Table) do
 		local Type = type(Value)
 		local Obj
 		if Type == 'string' then
-			Obj = Instance.new("StringValue")
+			Obj = Instance.new('StringValue')
 		elseif Type == 'number' then
-			local NumberValue = Instance.new("NumberValue")
+			local NumberValue = Instance.new('NumberValue')
 			NumberValue.Name = Index
 			NumberValue.Value = Value
 			NumberValue.Parent = Parent
 		elseif Type == 'boolean' then
-			Obj = Instance.new("BoolValue")
+			Obj = Instance.new('BoolValue')
 		elseif Type == 'table' then
 			Obj = Instance.new('Folder')
-			Table.TableToInstance(Value, Obj)
+			TableToInstance(Value, Obj)
 		end
 
 		Obj.Name = Index
@@ -281,7 +281,7 @@ end;Table.TableToInstance = TableToInstance;
 
 local InstanceTableReversal
 InstanceTableReversal = function(Parent,Table) -- turns folder with values into table
-	for _, Obj in pairs(Parent:GetChildren()) do
+	for _, Obj in ipairs(Parent:GetChildren()) do
 		if Obj.ClassName:find'Value' then
 			Table[Obj.Name] = Obj.Value
 		elseif Obj:IsA'Folder' then
@@ -291,7 +291,9 @@ InstanceTableReversal = function(Parent,Table) -- turns folder with values into 
 			else
 				table.insert(Table,NewTable)
 			end
-			Table.InstanceTableReversal(Obj,NewTable)
+			InstanceTableReversal(Obj, NewTable)
+		else
+			table.insert(Table, Obj.Name)
 		end
 	end
 end;Table.InstanceTableReversal = InstanceTableReversal;
